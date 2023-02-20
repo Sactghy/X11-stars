@@ -254,9 +254,7 @@ int main()
 
        if ( e0.xbutton.type == ButtonRelease && bpress == 1 ) { bpress = 0;
 
-       }
-
-       else if ( e0.xbutton.type == ButtonPress ) {
+       } else if ( e0.xbutton.type == ButtonPress ) {
 
            d_x = 510 - e0.xbutton.x; d_y = 370 - e0.xbutton.y;
 
