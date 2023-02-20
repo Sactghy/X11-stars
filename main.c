@@ -130,7 +130,7 @@ int main()
     j0_: ; char *dtI = malloc( sizeof( char[1501*1500*3] ) );
     if ( !dtI ) { printf( "Bad alloc: dtI\n" ); goto j0_; }
 
-    const char* fname = "./img.ppm";
+    const char* fname = "/zxc/bin/img.ppm";
     FILE* iF = fopen( fname, "r+" ); if ( !iF ) printf( "Open file: img.ppm error...\n" );
 
     fseek( iF, 0x40, SEEK_SET ); fread( dtI, sizeof(*dtI), 1500*1500*3-1, iF );
@@ -220,7 +220,8 @@ int main()
 
     double cc1 = 10.0 * clock() / CLOCKS_PER_SEC, cc2 = cc1 + 1.1;
 
-    do { double ccc = cc2 - cc1; if ( ccc > 0.78 ) {
+
+   do { double ccc = cc2 - cc1; if ( ccc > 0.78 ) {
 
     cc1 = 10.0 * clock() / CLOCKS_PER_SEC;
 
@@ -278,7 +279,7 @@ int main()
 
     } else cc2 = 10.0 * clock() / CLOCKS_PER_SEC; }
 
-    while ( e1.type != KeyRelease && e1.xkey.keycode == 0 );
+    while ( e1.type != KeyRelease && e1.xkey.keycode != 9 );
 
     } XCloseDisplay(d);
 
