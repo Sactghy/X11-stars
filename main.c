@@ -130,7 +130,7 @@ int main()
     j0_: ; char *dtI = malloc( sizeof( char[1501*1500*3] ) );
     if ( !dtI ) { printf( "Bad alloc: dtI\n" ); goto j0_; }
 
-    const char* fname = "/zxc/bin/img.ppm";
+    const char* fname = "./img.ppm";
     FILE* iF = fopen( fname, "r+" ); if ( !iF ) printf( "Open file: img.ppm error...\n" );
 
     fseek( iF, 0x40, SEEK_SET ); fread( dtI, sizeof(*dtI), 1500*1500*3-1, iF );
