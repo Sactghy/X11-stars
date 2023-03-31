@@ -5,8 +5,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-struct Point2D { int mx, my; };
-struct Point3D { double mx,my,mz; unsigned char b,g,r; };
+struct Vec2 { int mx, my; };
+struct Vec3 { double mx,my,mz; unsigned char b,g,r; };
 
 struct Randm{ int res, result; };
 
@@ -21,7 +21,7 @@ char rand0( struct Randm* a )
 }
 
 double scale = 900.00;
-void trnsCrd( struct Point3D *c1, struct Point2D *a1 )
+void trnsCrd( struct Vec3 *c1, struct Vec2 *a1 )
 {
     double x = ( 510.55 + ( ( ( c1->mx / ( -1.0 * ( c1->mz - scale ) ) ) ) * 300.0 ) ),
            y = ( 370.55 + ( ( ( c1->my / ( -1.0 * ( c1->mz - scale ) ) ) ) * 300.0 ) );
@@ -29,7 +29,7 @@ void trnsCrd( struct Point3D *c1, struct Point2D *a1 )
     a1->mx = (int)(x); a1->my = (int)(y);
 }
 
-void Rotate3Dy(struct Point3D *c, double const cosa, double const sina, int drctn)
+void Rotate3Dy(struct PVec3 *c, double const cosa, double const sina, int drctn)
 {
     double ry = 0, rz = 0;
     if (drctn) { ry=(c->my*cosa)-(c->mz*sina); rz=(c->mz*cosa)+(c->my*sina); }
@@ -37,12 +37,12 @@ void Rotate3Dy(struct Point3D *c, double const cosa, double const sina, int drct
     c->mz=rz; c->my=ry;
 }
 
-void Rotate3Dz(struct Point3D *c, double const cosa, double const sina)
+void Rotate3Dz(struct Vec3 *c, double const cosa, double const sina)
 {
     double rx = (c->mx*cosa)-(c->my*sina), ry = (c->my*cosa)+(c->mx*sina);
     c->mx=rx; c->my=ry;
 }
-void Rotate3Dx(struct Point3D *c, double const cosa, double const sina, int drctn)
+void Rotate3Dx(struct Vec3 *c, double const cosa, double const sina, int drctn)
 {
     double rx = 0, rz = 0;
     if ( drctn ) { rx=(c->mx*cosa)+(c->mz*sina); rz=(c->mz*cosa)-(c->mx*sina); }
@@ -96,7 +96,7 @@ sk1: 	  if ((b%2!=0)) k2=-1; else k2=1;
      } if (cr) xc++; else yc--; }
 }
 
-void putStr(char *dtM, struct Point2D *dt2D, unsigned char pix)
+void putStr(char *dtM, struct Vec2 *dt2D, unsigned char pix)
 {	unsigned char b = pix, g = pix, r = pix;
     for ( int y = -2; y <= 2; y++ ) { for ( int x = -2; x <= 2; x++ ) {
     int pos = ( ( 1020 * ( dt2D->my + y ) ) + ( dt2D->mx + x ) ) * 4;
@@ -114,7 +114,7 @@ void putStr(char *dtM, struct Point2D *dt2D, unsigned char pix)
     no_: ; } }
 }
 
-void putDts2D(char *dtM, struct Point2D *dt2D, struct Point3D *dt3D)
+void putDts2D(char *dtM, struct Vec2 *dt2D, struct Vec3 *dt3D)
 {
     if ( dt3D->mz <= -255 ) { putStr(dtM, dt2D, 69);  return; }
     if ( dt3D->mz >= 255  ) { putStr(dtM, dt2D, 236); return; } //111
@@ -131,7 +131,7 @@ int main()
     if ( !dtI ) { printf( "Bad alloc: dtI\n" ); goto j0_; }
 
     const char* fname = "./img.ppm";
-    FILE* iF = fopen( fname, "r+" ); if ( !iF ) printf( "Open file: img.ppm error...\n" );
+    FILE* iF = fopen( fname, "r+" ); if ( !iF ) { printf( "Open file: img.ppm error...\n" ); free(dtI); return 0;}
 
     fseek( iF, 0x40, SEEK_SET ); fread( dtI, sizeof(*dtI), 1500*1500*3-1, iF );
     if ( feof(iF) || ferror(iF) ) printf("Error reading: unexpected end of file || something else.\n");
@@ -215,7 +215,7 @@ int main()
 
     char *dt = Img->data;
 
-    struct Point3D dot3D; struct Point2D dot2D;
+    struct Vec3 dot3D; struct Vec2 dot2D;
     int ximg = 0, yimg = 1400, bpress = 0;
 
     double cc1 = 10.0 * clock() / CLOCKS_PER_SEC, cc2 = cc1 + 1.1;
@@ -271,7 +271,7 @@ int main()
 
     }
 
-    XCheckWindowEvent( d, w, KeyPressMask, &e1 );
+    if ( XCheckWindowEvent( d, w, KeyPressMask, &e1 ) ) //;
 
     if ( e1.type == KeyPress ) { if ( e1.xkey.keycode == 65 ) {
                 XNextEvent(d, &e1); e1.xkey.keycode = 0; e1.type = 0; }
@@ -281,7 +281,7 @@ int main()
 
     while ( e1.type != KeyRelease && e1.xkey.keycode != 9 );
 
-    } XCloseDisplay(d);
+    XCloseDisplay(d); }
 
     free ( dtI ); free ( vx ); free ( vy ); free ( vz );
 
