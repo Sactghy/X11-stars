@@ -29,7 +29,7 @@ void trnsCrd( struct Vec3 *c1, struct Vec2 *a1 )
     a1->mx = (int)(x); a1->my = (int)(y);
 }
 
-void Rotate3Dy(struct PVec3 *c, double const cosa, double const sina, int drctn)
+void Rotate3Dy(struct Vec3 *c, double const cosa, double const sina, int drctn)
 {
     double ry = 0, rz = 0;
     if (drctn) { ry=(c->my*cosa)-(c->mz*sina); rz=(c->mz*cosa)+(c->my*sina); }
